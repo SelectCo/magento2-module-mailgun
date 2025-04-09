@@ -58,7 +58,7 @@ class MailgunTest
             {
                 $gatewayResponse['is_valid'] = true;
             }
-            $gatewayResponse['request_message'] = __($response->getId());
+            $gatewayResponse['request_message'] = __($response->getMessage());
         }
 
         return $gatewayResponse;
