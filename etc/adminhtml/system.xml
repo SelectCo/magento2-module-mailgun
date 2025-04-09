@@ -21,6 +21,7 @@
                 </field>
             </group>
             <group id="api" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>API</label>
                 <field id="sender_domain" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sending Domain Name</label>
                     <tooltip>Must match to the domain you have configured on app.mailgun.com.</tooltip>
@@ -35,9 +36,11 @@
                 </field>
             </group>
             <group id="debug" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Debug</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Debug Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Mailgun will accept the message but will not send it.  Note: You are charged for messages sent in test mode!</comment>
                 </field>
                 <field id="pastebin_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pastebin Enabled</label>
@@ -48,6 +51,13 @@
                     <depends>
                         <field id="selectco_mailgun/debug/pastebin_enabled">1</field>
                     </depends>
+                </field>
+            </group>
+            <group id="test" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Send Test Email</label>
+                <field id="mailgun_send" translate="button_label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <button_label>Send Test Email</button_label>
+                    <frontend_model>SelectCo\Mailgun\Block\Adminhtml\System\Config\SendTest</frontend_model>
                 </field>
             </group>
         </section>
