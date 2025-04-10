@@ -7,10 +7,12 @@ declare(strict_types=1);
 
 namespace SelectCo\Mailgun\Model;
 
+use Exception;
 use Mailgun\HttpClientConfigurator;
 use Mailgun\Mailgun as MG;
 use Mailgun\Model\Message\SendResponse;
 use SelectCo\Mailgun\Helper\Data;
+use TypeError;
 
 class Mailgun
 {
@@ -57,7 +59,7 @@ class Mailgun
             return $mailgun->messages()->send($this->helper->getDomain(), $params);
 
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             return SendResponse::create(['message' => $e->getMessage()]);
         }
@@ -70,26 +72,20 @@ class Mailgun
     private function createMessageParameters($message): array
     {
         $attachments = [];
+        $messageBody = '';
 
-        if ($message instanceof \Magento\Framework\Mail\MessageInterface)
-        {
-            $message = \Zend\Mail\Message::fromString($message->getRawMessage());
-            if ($message->getBody() instanceof Mime\Message) {
-                /** @var \Zend\Mime\Part $part */
-                foreach ($message->getBody()->getParts() as $part) {
-                    if ($part->disposition == 'attachment') {
-                        $attachments[] = $part;
-                    }
-                }
+        foreach ($message->getMessageBody()->getParts() as $part) {
+            if ($part->getType() === 'text/html') {
+                $messageBody = $part->getContent();
             }
-        }
-        else
-        {
-            foreach ($message->getMessageBody()->getParts() as $part) {
+            try {
                 if ($part->getDisposition() === 'attachment') {
-                    $attachments[] = $part;
+                    $attachments[] = [
+                        'fileContent' => $part->getRawContent(),
+                        'filename'=>$part->getFileName()
+                    ];
                 }
-            }
+            } catch (TypeError $e) {}
         }
 
         return [
@@ -99,7 +95,7 @@ class Mailgun
             'from' => $this->parseAddressList($message->getFrom()),
             'reply-to' => $this->parseAddressList($message->getReplyTo()),
             'subject' => $message->getSubject(),
-            'html' => quoted_printable_decode($message->getBody()),
+            'html' => quoted_printable_decode($messageBody),
             'attachment' => $attachments
         ];
     }
