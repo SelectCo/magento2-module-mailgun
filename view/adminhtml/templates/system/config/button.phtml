@@ -1,0 +1,87 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use SelectCo\Mailgun\Block\Adminhtml\System\Config\SendTest;
+/** @var SendTest $block */
+?>
+
+<tbody>
+<tr id="row_selectco_mailgun_test_email_from">
+    <td class="label">
+        <label for="selectco_mailgun_test_email_from"><span>Email From</span></label>
+    </td>
+    <td class="value">
+        <input id="selectco_mailgun_test_email_from" value="" class="input-text admin__control-text" type="text">
+    </td>
+    <td class=""></td>
+</tr>
+<tr id="row_selectco_mailgun_test_email_to">
+    <td class="label">
+        <label for="selectco_mailgun_test_email_to"><span>Email To</span></label>
+    </td>
+    <td class="value">
+        <input id="selectco_mailgun_test_email_to" value="" class="input-text admin__control-text" type="text">
+    </td>
+    <td class=""></td>
+</tr>
+<tr id="row_test_mailgun_send">
+    <td class="label">
+        <label for="row_test_mailgun_send"><span></span></label>
+    </td>
+    <td class="value">
+        <div class="actions actions-send-test">
+            <p class="admin__field-error hidden" id="validation_result" style="margin-bottom:10px;"></p>
+            <?= /* @escapeNotVerified */ $block->getData('button_html') ?>
+        </div>
+
+        <script type="text/javascript">
+            require(['jquery'], function ($) {
+
+                var buttonId = 'selectco_mailgun_test_mailgun_send';
+
+                $('#' + buttonId).click(function (e) {
+                    e.preventDefault();
+                    callTest();
+                });
+
+                function callTest() {
+                    var isValid = true;
+                    var validationMessage = document.getElementById('validation_result')
+
+                    var params = {
+                        from: document.getElementById('selectco_mailgun_test_email_from').value,
+                        to: document.getElementById('selectco_mailgun_test_email_to').value
+                    };
+
+                    if (isValid) {
+                        $.ajax({
+                            url: '<?= /* @escapeNotVerified */ $block->getData('ajax_url') ?>',
+                            data: params,
+                            dataType: 'json',
+                            success: function (response) {
+                                console.log(response);
+
+                                if (response.valid === 1) {
+                                    validationMessage.classList.add('note');
+                                    validationMessage.classList.remove('admin__field-error');
+                                }
+                                validationMessage.innerHTML = response.message;
+                            },
+                            failed: function () {
+                                validationMessage.innerHTML = 'An error has occurred';
+                            }
+                        });
+                    } else {
+                        validationMessage.innerHTML = 'Parameters were not valid';
+
+                    }
+                    validationMessage.classList.remove('hidden');
+                }
+            })
+        </script>
+    </td>
+</tr>
+</tbody>
