@@ -1,0 +1,14 @@
+<!--@subject {{trans "Test Email From Mailgun"}} @-->
+<!--@vars {
+"var email_from": "Email From Address",
+"var email_to": "Email To Address",
+} @-->
+
+<p>
+    <strong>{{trans "This is a test email to confirm is configurations in Mailgun are correct."}}</strong>
+</p>
+
+<p>
+    {{trans "Email Sent From: "}} <strong>{{var email_from}}</strong><br>
+    {{trans "Email Sent To: "}} <strong>{{var email_to}}</strong><br>
+</p>

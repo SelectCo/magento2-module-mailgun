@@ -1,0 +1,21 @@
+{
+  "name": "select-co/module-mailgun",
+  "description": "N/A",
+  "type": "magento2-module",
+  "require": {
+    "mailgun/mailgun-php": "^2.4.0",
+    "magento/framework": "*",
+    "php-http/multipart-stream-builder": "1.0.0"
+  },
+  "license": [
+    "Proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "SelectCo\\Mailgun\\": ""
+    }
+  }
+}
